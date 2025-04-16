@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brawl Stars Black Donate</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --glass-bg: rgba(30, 30, 30, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --primary-color: #0a0a0a;
+            --secondary-color: #1a1a1a;
+            --positive-color: #10b981;
+            --negative-color: #ef4444;
+            --accent-color: #3b82f6;
+            --text-color: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .balance {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .balance-add {
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .balance-add:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .glass-btn {
+            background: rgba(59, 130, 246, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 25px 15px;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            min-height: 100px;
+        }
+
+        .glass-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .glass-btn i {
+            font-size: 1.8rem;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .transaction {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .transaction:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .transaction-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .positive {
+            color: var(--positive-color);
+        }
+
+        .negative {
+            color: var(--negative-color);
+        }
+
+        .transaction-date {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        .item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .item:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-5px);
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .buy-btn {
+            background: linear-gradient(to right, var(--accent-color), #6366f1);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .buy-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 450px;
+            animation: fadeIn 0.4s ease-out;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            background: none;
+            border: none;
+            color: white;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+        }
+
+        /* Обновленные стили поддержки */
+        .support-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 25px;
+        }
+
+        .support-header {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .support-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 20px 0;
+        }
+
+        .support-section {
+            margin-bottom: 20px;
+        }
+
+        .support-section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .support-section-content {
+            padding-left: 35px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .support-contact-btn {
+            display: block;
+            background: linear-gradient(to right, var(--accent-color), #6366f1);
+            color: white;
+            text-decoration: none;
+            padding: 18px;
+            border-radius: 16px;
+            margin-top: 25px;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .support-contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .faq-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .faq-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .faq-question {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .glass-card {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            .glass-btn {
+                padding: 20px 15px;
+                font-size: 1.1rem;
+                min-height: 90px;
+            }
+            .modal-content {
+                padding: 25px;
+            }
+        }
+
+        .icon {
+            font-size: 1.3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="glass-card header">
+            <div><i class="fas fa-wallet icon"></i> Общий баланс</div>
+            <div class="balance">
+                <span id="user-balance">0,00 ₽</span>
+                <div class="balance-add" onclick="openDeposit()">
+                    <i class="fas fa-plus"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-grid">
+            <div class="glass-btn" onclick="openStore()">
+                <i class="fas fa-store"></i>
+                <span>STORE</span>
+            </div>
+            <div class="glass-btn" onclick="openReferrals()">
+                <i class="fas fa-users"></i>
+                <span>Рефералы</span>
+            </div>
+            <div class="glass-btn" onclick="openFAQ()">
+                <i class="fas fa-question-circle"></i>
+                <span>FAQ</span>
+            </div>
+            <div class="glass-btn" onclick="openSupport()">
+                <i class="fas fa-headset"></i>
+                <span>ПОДДЕРЖКА</span>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <div style="font-weight: 600; margin-bottom: 15px; font-size: 1.2rem;">
+                <i class="fas fa-exchange-alt icon"></i> Ваши транзакции
+            </div>
+            <div id="transactions-list">
+                <!-- Транзакции будут добавляться здесь -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно магазина -->
+    <div id="store-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('store-modal')">&times;</span>
+            <h2 style="color: var(--accent-color);"><i class="fas fa-store icon"></i> BRAWL STARS</h2>
+
+            <h3 style="display: flex; align-items: center; gap: 10px; color: var(--accent-color);">
+                <i class="fas fa-gem"></i> ГЕМЫ
+            </h3>
+            <div class="item" onclick="selectItem(30, 160, '30 гемов', 'gem')">
+                <div class="item-info">
+                    <i class="fas fa-gem" style="color: var(--accent-color);"></i>
+                    <div>30 гемов</div>
+                </div>
+                <div>160 ₽</div>
+                <button class="buy-btn">Купить</button>
+            </div>
+            <div class="item" onclick="selectItem(80, 380, '80 гемов', 'gem')">
+                <div class="item-info">
+                    <i class="fas fa-gem" style="color: var(--accent-color);"></i>
+                    <div>80 гемов</div>
+                </div>
+                <div>380 ₽</div>
+                <button class="buy-btn">Купить</button>
+            </div>
+            <div class="item" onclick="selectItem(170, 730, '170 гемов', 'gem')">
+                <div class="item-info">
+                    <i class="fas fa-gem" style="color: var(--accent-color);"></i>
+                    <div>170 гемов</div>
+                </div>
+                <div>730 ₽</div>
+                <button class="buy-btn">Купить</button>
+            </div>
+            <div class="item" onclick="selectItem(360, 1435, '360 гемов', 'gem')">
+                <div class="item-info">
+                    <i class="fas fa-gem" style="color: var(--accent-color);"></i>
+                    <div>360 гемов</div>
+                </div>
+                <div>1 435 ₽</div>
+                <button class="buy-btn">Купить</button>
+            </div>
+            <div class="item" onclick="selectItem(950, 3450, '950 гемов', 'gem')">
+                <div class="item-info">
+                    <i class="fas fa-gem" style="color: var(--accent-color);"></i>
+                    <div>950 гемов</div>
+                </div>
+                <div>3 450 ₽</div>
+                <button class="buy-btn">Купить</button>
+            </div>
+            <div class="item" onclick="selectItem(2000, 6875, '2000 гемов', 'gem')">
+                <div class="item-info">
+                    <i class="fas fa-gem" style="color: var(--accent-color);"></i>
+                    <div>2000 гемов</div>
+                </div>
+                <div>6 875 ₽</div>
+                <button class="buy-btn">Купить</button>
+            </div>
+
+            <h3 style="display: flex; align-items: center; gap: 10px; color: var(--accent-color); margin-top: 25px;">
+                <i class="fas fa-trophy"></i> БРАВЛ ПАСС
+            </h3>
+            <div class="item" onclick="selectItem('brawl_pass', 500, 'БРАВЛ ПАСС', 'trophy')">
+                <div class="item-info">
+                    <i class="fas fa-trophy" style="color: var(--accent-color);"></i>
+                    <div>БРАВЛ ПАСС</div>
+                </div>
+                <div>500 ₽</div>
+                <button class="buy-btn">Купить</button>
+            </div>
+            <div class="item" onclick="selectItem('brawl_pass_plus', 750, 'БРАВЛ ПАСС ПЛЮС', 'trophy')">
+                <div class="item-info">
+                    <i class="fas fa-trophy" style="color: var(--accent-color);"></i>
+                    <div>БРАВЛ ПАСС ПЛЮС</div>
+                </div>
+                <div>750 ₽</div>
+                <button class="buy-btn">Купить</button>
+            </div>
+            <div class="item" onclick="selectItem('pro_pass', 1800, 'ПРО ПАСС', 'trophy')">
+                <div class="item-info">
+                    <i class="fas fa-trophy" style="color: var(--accent-color);"></i>
+                    <div>ПРО ПАСС</div>
+                </div>
+                <div>1 800 ₽</div>
+                <button class="buy-btn">Купить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно пополнения -->
+    <div id="deposit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('deposit-modal')">&times;</span>
+            <h2 style="color: var(--accent-color);"><i class="fas fa-coins icon"></i> Пополнение баланса</h2>
+            <div style="margin-bottom: 25px;">
+                <input type="number" id="deposit-amount" placeholder="Сумма в ₽" style="width: 100%; padding: 15px; border-radius: 12px; border: none; background: rgba(255,255,255,0.1); color: white; font-size: 1.1rem;">
+            </div>
+
+            <h3 style="margin-bottom: 20px; display: flex; align-items: center; gap: 12px; color: var(--accent-color);">
+                <i class="fas fa-credit-card"></i> Выберите способ оплаты:
+            </h3>
+
+            <div class="card-method" onclick="processDeposit('monobank')">
+                <div class="card-icon" style="color: #6d2eae;">
+                    <i class="fab fa-monero"></i>
+                </div>
+                <div class="card-name">МОНОБАНК</div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+
+            <div class="card-method" onclick="processDeposit('tbank')">
+                <div class="card-icon" style="color: #3b82f6;">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="card-name">Т-БАНК</div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно оплаты -->
+    <div id="payment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('payment-modal')">&times;</span>
+            <h2 id="payment-title" style="color: var(--accent-color);"><i class="fas fa-credit-card icon"></i> Оплата</h2>
+            <div id="payment-description" style="margin-bottom: 25px;"></div>
+
+            <div class="glass-btn" onclick="processPayment('funpay')">
+                <i class="fas fa-shopping-cart"></i>
+                <span>FUNPAY</span>
+            </div>
+            <div class="glass-btn" onclick="processPayment('cryptobot')" style="margin-top: 15px;">
+                <i class="fab fa-bitcoin"></i>
+                <span>CryptoBot</span>
+            </div>
+            <div class="glass-btn" onclick="processPayment('balance')" style="margin-top: 15px;">
+                <i class="fas fa-wallet"></i>
+                <span>С баланса</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно рефералов -->
+    <div id="referral-modal" class="modal">
+        <div class="modal-content">
+            <div class="support-container">
+                <h2 class="support-header"><i class="fas fa-users"></i> Реферальная система</h2>
+                <p style="text-align: center; margin-bottom: 30px; opacity: 0.8; font-size: 1.1rem;">Эта функция появится в будущих обновлениях!</p>
+
+                <div class="support-section">
+                    <div class="support-section-title">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Что будет?</span>
+                    </div>
+                    <div class="support-section-content">Приглашайте друзей и получайте бонусы за их покупки</div>
+                </div>
+
+                <div class="support-section">
+                    <div class="support-section-title">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Когда выйдет?</span>
+                    </div>
+                    <div class="support-section-content">Мы работаем над этой функцией и выпустим её в ближайшее время</div>
+                </div>
+
+                <button class="support-contact-btn" onclick="closeModal('referral-modal')">
+                    <i class="fas fa-check"></i> Понятно
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно поддержки -->
+    <div id="support-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('support-modal')">&times;</span>
+            <div class="support-container">
+                <h2 class="support-header"><i class="fas fa-headset"></i> Связаться с поддержкой</h2>
+                <p style="text-align: center; margin-bottom: 30px; opacity: 0.8; font-size: 1.1rem;">
+                    Наша команда поддержки готова помочь вам с любыми вопросами
+                </p>
+
+                <div class="support-divider"></div>
+
+                <div class="support-section">
+                    <div class="support-section-title">
+                        <i class="fas fa-clock"></i>
+                        <span>Время работы</span>
+                    </div>
+                    <div class="support-section-content">
+                        Ежедневно с 9:00 до 21:00 по МСК
+                    </div>
+                </div>
+
+                <div class="support-section">
+                    <div class="support-section-title">
+                        <i class="fas fa-stopwatch"></i>
+                        <span>Среднее время ответа</span>
+                    </div>
+                    <div class="support-section-content">
+                        До 30 минут в рабочее время
+                    </div>
+                </div>
+
+                <button class="support-contact-btn" onclick="openTelegramSupport()">
+                    <i class="fab fa-telegram"></i> Написать в Telegram
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно FAQ -->
+    <div id="faq-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('faq-modal')">&times;</span>
+            <div class="support-container">
+                <h2 class="support-header"><i class="fas fa-question-circle"></i> Часто задаваемые вопросы</h2>
+
+                <div class="faq-form">
+                    <div class="faq-item">
+                        <div class="faq-question">1. Как оплатить через FunPay?</div>
+                        <div class="support-section-content">
+                            Для оплаты через FunPay:
+                            <ol>
+                                <li>Выберите товар в магазине</li>
+                                <li>Нажмите "Купить"</li>
+                                <li>Выберите способ оплаты "FunPay"</li>
+                                <li>Следуйте инструкциям платежной системы</li>
+                                <li>После оплаты товар будет автоматически зачислен</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">2. Как работает оплата с баланса?</div>
+                        <div class="support-section-content">
+                            Вы можете пополнить баланс в приложении, а затем использовать эти средства для покупки товаров. При выборе оплаты "С баланса" сумма автоматически спишется с вашего счета.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">3. Как быстро приходит товар после оплаты?</div>
+                        <div class="support-section-content">
+                            В большинстве случаев товар приходит мгновенно. Если возникли задержки, обратитесь в поддержку.
+                        </div>
+                    </div>
+                </div>
+
+                <button class="support-contact-btn" onclick="closeModal('faq-modal')">
+                    <i class="fas fa-check"></i> Закрыть
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Данные пользователя
+        let user = {
+            balance: 0,
+            transactions: [],
+            hasPurchased: false
+        };
+
+        // Выбранный товар
+        let selectedItem = {
+            id: null,
+            price: 0,
+            name: '',
+            type: ''
+        };
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            updateBalance();
+            loadTransactions();
+
+            // Инициализация Telegram Web App
+            if (typeof Telegram !== 'undefined') {
+                Telegram.WebApp.ready();
+                Telegram.WebApp.expand();
+            }
+        });
+
+        // Обновление баланса
+        function updateBalance() {
+            document.getElementById('user-balance').textContent = user.balance.toFixed(2) + ' ₽';
+        }
+
+        // Загрузка транзакций
+        function loadTransactions() {
+            const container = document.getElementById('transactions-list');
+            container.innerHTML = '';
+
+            if (user.transactions.length === 0) {
+                container.innerHTML = '<div style="text-align: center; opacity: 0.7; padding: 30px; font-size: 1.1rem;">Нет транзакций</div>';
+                return;
+            }
+
+            user.transactions.forEach(transaction => {
+                const div = document.createElement('div');
+                div.className = 'transaction';
+
+                const amountClass = transaction.amount > 0 ? 'positive' : 'negative';
+                const icon = transaction.amount > 0 ? 'fa-arrow-down' : 'fa-arrow-up';
+
+                div.innerHTML = `
+                    <div class="transaction-info">
+                        <i class="fas ${icon} icon"></i>
+                        <div>${transaction.type}</div>
+                    </div>
+                    <div>
+                        <span class="transaction-amount ${amountClass}">${transaction.amount > 0 ? '+' : ''}${transaction.amount.toFixed(2)} ₽</span>
+                        <div class="transaction-date">${transaction.date}</div>
+                    </div>
+                `;
+
+                container.appendChild(div);
+            });
+        }
+
+        // Добавление транзакции
+        function addTransaction(type, amount, paymentMethod = null) {
+            const now = new Date();
+            const date = now.toLocaleDateString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+
+            let transactionType = type;
+            if (paymentMethod) {
+                transactionType = `${type} (${paymentMethod})`;
+            }
+
+            user.transactions.unshift({
+                type: transactionType,
+                amount: amount,
+                date: date
+            });
+
+            if (amount > 0) {
+                user.balance += amount;
+            } else {
+                user.balance = Math.max(0, user.balance - Math.abs(amount));
+                user.hasPurchased = true;
+            }
+
+            updateBalance();
+            loadTransactions();
+        }
+
+        // Открытие модальных окон
+        function openStore() {
+            document.getElementById('store-modal').style.display = 'flex';
+        }
+
+        function openDeposit() {
+            document.getElementById('deposit-amount').value = '';
+            document.getElementById('deposit-modal').style.display = 'flex';
+        }
+
+        function openSupport() {
+            document.getElementById('support-modal').style.display = 'flex';
+        }
+
+        function openFAQ() {
+            document.getElementById('faq-modal').style.display = 'flex';
+        }
+
+        function openReferrals() {
+            document.getElementById('referral-modal').style.display = 'flex';
+        }
+
+        function openTelegramSupport() {
+            window.open('https://t.me/shevard', '_blank');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // Выбор товара
+        function selectItem(id, price, name, type) {
+            selectedItem = { id, price, name, type };
+            closeModal('store-modal');
+
+            document.getElementById('payment-title').innerHTML = `<i class="fas fa-credit-card icon"></i> Оплата: ${name}`;
+            document.getElementById('payment-description').innerHTML = `
+                <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 16px; margin-bottom: 20px;">
+                    <div style="font-weight: 600; font-size: 1.2rem;">${name}</div>
+                    <div style="font-size: 1.5rem; font-weight: 700; margin-top: 10px; color: var(--accent-color);">${price.toFixed(2)} ₽</div>
+                </div>
+                <div style="font-size: 1rem; opacity: 0.8; text-align: center; margin-bottom: 10px;">Выберите способ оплаты:</div>
+            `;
+
+            document.getElementById('payment-modal').style.display = 'flex';
+        }
+
+        // Процесс пополнения
+        function processDeposit(method) {
+            const amount = parseFloat(document.getElementById('deposit-amount').value);
+
+            if (isNaN(amount) || amount <= 0) {
+                alert('Введите корректную сумму');
+                return;
+            }
+
+            closeModal('deposit-modal');
+            alert(`Перенаправление на оплату ${amount.toFixed(2)} ₽ через ${method.toUpperCase()}`);
+
+            // Имитация успешного платежа через 2 секунды
+            setTimeout(() => {
+                addTransaction('Пополнение баланса', amount, method);
+                alert(`Баланс успешно пополнен на ${amount.toFixed(2)} ₽!`);
+            }, 2000);
+        }
+
+        // Процесс оплаты
+        function processPayment(method) {
+            let amount = selectedItem.price;
+            let description = selectedItem.name;
+
+            if (method === 'balance') {
+                if (user.balance < amount) {
+                    alert('Недостаточно средств на балансе');
+                    return;
+                }
+
+                addTransaction(selectedItem.name, -amount, 'С баланса');
+                alert(`Покупка "${selectedItem.name}" успешно совершена!`);
+                closeModal('payment-modal');
+                return;
+            }
+
+            // Для всех других методов
+            closeModal('payment-modal');
+            alert(`Перенаправление на оплату ${description} за ${amount.toFixed(2)} ₽ через ${method.toUpperCase()}`);
+
+            // Имитация успешного платежа через 2 секунды
+            setTimeout(() => {
+                addTransaction(selectedItem.name, -amount, method);
+                alert(`Покупка "${selectedItem.name}" успешно оплачена через ${method.toUpperCase()}!`);
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
